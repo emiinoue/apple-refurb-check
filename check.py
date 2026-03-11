@@ -32,7 +32,7 @@ def check():
     r = requests.get(URL)
 
     if "iPad mini" in r.text:
-        send_line("iPad mini 整備品が出ました！")
+        send_line("The iPad mini has been uploaded.")
 
 
 check()
