@@ -1,0 +1,23 @@
+name: check apple refurb
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: install requests
+        run: pip install requests
+
+      - name: run script
+        run: python check.py
