@@ -1,6 +1,7 @@
 name: check apple refurb
 
 on:
+workflow_dispatch:
   schedule:
     - cron: "*/10 * * * *"
 
