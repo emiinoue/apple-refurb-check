@@ -30,9 +30,9 @@ def check():
     
     try:
         r = requests.get(URL, headers=headers, timeout=15)
-        # ページの中に「iPad mini」があるかチェック
-        if "iPad" in r.text:
-            send_line("Apple公式サイトに iPad の整備済製品が掲載されています！\n" + URL)
+        # ここを「iPad mini」に戻しました！
+        if "iPad mini" in r.text:
+            send_line("Apple公式サイトに iPad mini の整備済製品が掲載されています！\n" + URL)
         else:
             print("現在は在庫がないようです。")
     except Exception as e:
