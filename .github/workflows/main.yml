@@ -2,6 +2,26 @@ name: apple-refurb-check
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'  # 1時間ごとに自動チェック
+  push:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - run: pip install requests
+      - run: python check.py
+        env:
+          LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
+          USER_ID: ${{ secrets.USER_ID }}name: apple-refurb-check
+
+on:
+  workflow_dispatch:
   push:
 
 jobs:
