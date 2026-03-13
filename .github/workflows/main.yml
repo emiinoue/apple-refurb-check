@@ -3,7 +3,7 @@ name: apple-refurb-check
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'  # 1時間ごとに自動チェック
+    - cron: '*/30 * * * *'  # 30分ごとに自動チェック
   push:
 
 jobs:
