@@ -15,22 +15,13 @@ def check():
     headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
     try:
         r = requests.get(URL, headers=headers, timeout=15)
-        html_text = r.text
-
-        # 判定用ワード（これらが含まれていたら「在庫なし」）
-        no_stock_keywords = ["在庫がありません", "しばらくしてからもう一度", "お近くの店舗"]
-        
-        is_no_stock = any(k in html_text for k in no_stock_keywords)
-
-        if is_no_stock:
-            print("在庫なしを確認。")
+        # 商品リストの項目（grid-item）がページ内に存在するかチェック
+        if "refurbished-category-grid-item" in r.text:
+            send_line("【在庫あり】iPad miniの整備済製品が出品されました！\n" + URL)
         else:
-            # 原因調査のため、ページ冒頭のテキストを添えて通知
-            debug_text = html_text[:200].replace('\n', ' ')
-            send_line(f"【判定中】変化あり？\n確認用テキスト: {debug_text}\n{URL}")
-            
+            print("商品リストが見つかりません（在庫なし）。")
     except Exception as e:
-        send_line(f"エラー発生: {e}")
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     check()
