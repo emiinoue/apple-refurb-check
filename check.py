@@ -1,7 +1,6 @@
 import os
 import requests
 
-# iPad miniの整備済製品ページ
 URL = "https://www.apple.com/jp/shop/refurbished/ipad/ipad-mini"
 LINE_TOKEN = os.environ.get("LINE_TOKEN")
 USER_ID = os.environ.get("USER_ID")
@@ -16,26 +15,22 @@ def check():
     headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
     try:
         r = requests.get(URL, headers=headers, timeout=15)
-        html_content = r.text
+        html_text = r.text
 
-        # 在庫がない時に表示される代表的な3つのフレーズをチェック
-        no_stock_patterns = [
-            "現在、在庫がありません",
-            "在庫がありません",
-            "最新の在庫状況については、しばらくしてからもう一度ご確認ください"
-        ]
-
-        # いずれかの「在庫なし」フレーズが含まれていれば、在庫なしと判断
-        is_no_stock = any(pattern in html_content for pattern in no_stock_patterns)
+        # 判定用ワード（これらが含まれていたら「在庫なし」）
+        no_stock_keywords = ["在庫がありません", "しばらくしてからもう一度", "お近くの店舗"]
+        
+        is_no_stock = any(k in html_text for k in no_stock_keywords)
 
         if is_no_stock:
-            print("在庫なしを確認。通知をスキップします。")
+            print("在庫なしを確認。")
         else:
-            # どの「在庫なし」パターンも見つからなかった場合のみ通知
-            send_line("【通知】iPad miniの在庫が復活した可能性があります！\n" + URL)
+            # 原因調査のため、ページ冒頭のテキストを添えて通知
+            debug_text = html_text[:200].replace('\n', ' ')
+            send_line(f"【判定中】変化あり？\n確認用テキスト: {debug_text}\n{URL}")
             
     except Exception as e:
-        print(f"エラーが発生しました: {e}")
+        send_line(f"エラー発生: {e}")
 
 if __name__ == "__main__":
     check()
